@@ -1,30 +1,48 @@
-const CELL_NUM = 1000
-let cells
+const CELL_NUM = 20
+let cells = []
 
-class Cell{
-  constructor(x,y,full){
+class Cell {
+  constructor(x, y, s, full = false) {
     this.x = x
     this.y = y
+    this.size = s
     this.full = full
+    this.changed = false
   }
-  show(){
+
+  update() {
+    if (this.changed) {
+      this.full ? fill(255) : fill(0)
+      noStroke()
+      rect(this.x, this.y, this.size)
+    }
+  }
+
+  show() {
     this.full ? fill(255) : fill(0)
-    stroke(0,255,0)
-    rect(this.x,this.y,this.w,this.h)
+    noStroke()
+    rect(this.x, this.y, this.size+1)
   }
 }
 
 function setup() {
-  createCanvas(500,500);
-    background(51)
-    for (let i = 0; i < CELL_NUM; i++){
-      cells[i] = []
-      for(let j = 0; j < CELL_NUM; j++){
-        cells[i][j] = new Cell
-      }
+  createCanvas(windowWidth, windowHeight);
+  background(51)
+  const CELL_SIZE = Math.min(width, height) / CELL_NUM
+  for (let i = 0; i < CELL_NUM; i++) {
+    cells[i] = []
+    for (let j = 0; j < CELL_NUM; j++) {
+      cells[i][j] = new Cell(i * CELL_SIZE, j * CELL_SIZE, CELL_SIZE, (random() < 0.8))
+      cells[i][j].show()
     }
+  }
+
 }
 
 function draw() {
-  // put drawing code here and there
+  for (let cell_array of cells) {
+    for (let cell of cell_array) {
+      cell.update()
+    }
+  }
 }
